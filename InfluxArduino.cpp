@@ -10,7 +10,7 @@ InfluxArduino::~InfluxArduino()
 }
 
 void InfluxArduino::configure(const char database[],const char host[],const uint16_t port)
-{   
+{
     //copy these strings to private class pointers for future use
 
     _database = new char[strlen(database)+1];
@@ -43,11 +43,12 @@ void InfluxArduino::authorize(const char username[], const char password[])
 
 bool InfluxArduino::write(const char *measurement,const char *fieldString)
 {
-    write(measurement,"",fieldString);
+    return write(measurement,"",fieldString);
+
 }
 
 bool InfluxArduino::write(const char *measurement,const char *tagString,const char *fieldString)
-{   
+{
     HTTPClient http;
     char uri[32];
     sprintf(uri, "/write?db=%s", _database);
@@ -67,7 +68,7 @@ bool InfluxArduino::write(const char *measurement,const char *tagString,const ch
         http.setAuthorization(_username,_password);
     }
 
-    char writeBuf[512]; // ¯\_(ツ)_/¯ 
+    char writeBuf[512]; // ¯\_(ツ)_/¯
     if(strlen(tagString) > 0)
     {
         sprintf(writeBuf,"%s,%s %s",measurement,tagString,fieldString); //no comma between tags and fields
